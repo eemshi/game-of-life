@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import './Game.css';
 
 const CELL_SIZE = 20;
@@ -152,6 +152,21 @@ class Game extends Component {
         }, this.state.interval);
     }
 
+    handleClear = () => {
+        this.board = this.makeEmptyBoard();
+        this.setState({ cells: this.makeCells() });
+    }
+
+    handleRandom = () => {
+        for (let y = 0; y < this.rows; y++) {
+            for (let x = 0; x < this.cols; x++) {
+                this.board[y][x] = (Math.random() >= 0.5);
+            }
+        }
+
+        this.setState({ cells: this.makeCells() });
+    }
+
 
     render() {
         const { cells, isRunning } = this.state;
@@ -159,7 +174,8 @@ class Game extends Component {
             <div>
                 <div className="Board"
                      style={{ width: WIDTH, height: HEIGHT,
-                        backgroundSize: `${CELL_SIZE}px ${CELL_SIZE}px` }}
+                        backgroundSize: `${CELL_SIZE}px ${CELL_SIZE}px`,
+                        marginBottom: "25px" }}
                         onClick={this.handleClick}
                         ref={(n) => { this.boardRef = n; }}>
                         {cells.map(cell => (
@@ -168,17 +184,23 @@ class Game extends Component {
                     ))}
                 </div>
                 <div className="controls">
-                    Update every
-                    <input value={this.state.interval}
-                           onChange={this.handleIntervalChange} /> msec
+                    <span className="control-interval">
+                        Update every
+                        <input value={this.state.interval}
+                               onChange={this.handleIntervalChange} /> millisec
+                    </span>
                     {isRunning ?
-                        <button className="button"
+                        <button className="btn btn-danger"
                                 onClick={this.stopGame}>
                             Stop</button> :
-                        <button className="button"
+                        <button className="btn btn-success"
                                 onClick={this.runGame}>
                             Run</button>
                     }
+                    <button className="btn btn-warning" onClick={this.handleRandom}>
+                        Random</button>
+                    <button className="btn btn-primary" onClick={this.handleClear}>
+                        Clear</button>
                 </div>
             </div>
         );
