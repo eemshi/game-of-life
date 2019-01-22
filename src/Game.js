@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import './Game.css';
 
-const CELL_SIZE = 20;
+const CELL_SIZE = 15;
 const WIDTH = 800;
 const HEIGHT = 600;
+// let iteration = 0;
 
 class Cell extends Component {
     render() {
@@ -50,7 +51,7 @@ class Game extends Component {
         let cells = [];
         for (let y = 0; y < this.rows; y++) {
             for (let x = 0; x < this.cols; x++) {
-                if (this.board[y][x]) {
+                if (this.board[y][x] === true) {
                     cells.push({ x, y });
                 }
             }
@@ -111,6 +112,7 @@ class Game extends Component {
         const dirs = [[-1, -1], [-1, 0], [-1, 1], [0, 1], [1, 1], [1, 0], [1, -1], [0, -1]];
         for (let i = 0; i < dirs.length; i++) {
             const dir = dirs[i];
+            // determine relative coordinates to neighbor
             let y1 = y + dir[0];
             let x1 = x + dir[1];
 
@@ -123,8 +125,6 @@ class Game extends Component {
     }
 
     runIteration() {
-        console.log('running iteration');
-
         let newBoard = this.makeEmptyBoard();
 
         for (let y = 0; y < this.rows; y++) {
@@ -141,7 +141,11 @@ class Game extends Component {
                         newBoard[y][x] = true;
                     }
                 }
+                // iteration = iteration + 1;
+                // console.log('running iteration: ' + iteration);
             }
+            // iteration = iteration + 1;
+            // console.log('running iteration: ' + iteration);
         }
 
         this.board = newBoard;
@@ -173,15 +177,17 @@ class Game extends Component {
         return(
             <div>
                 <div className="Board"
-                     style={{ width: WIDTH, height: HEIGHT,
+                     style={{
+                        width: WIDTH,
+                        height: HEIGHT,
                         backgroundSize: `${CELL_SIZE}px ${CELL_SIZE}px`,
                         marginBottom: "25px" }}
-                        onClick={this.handleClick}
-                        ref={(n) => { this.boardRef = n; }}>
-                        {cells.map(cell => (
-                            <Cell x={cell.x} y={cell.y}
-                                  key={`${cell.x},${cell.y}`} />
-                    ))}
+                     onClick={this.handleClick}
+                     ref={(n) => { this.boardRef = n; }}>
+                {cells.map(cell => (
+                    <Cell x={cell.x} y={cell.y}
+                          key={`${cell.x},${cell.y}`} />
+                ))}
                 </div>
                 <div className="controls">
                     <span className="control-interval">
